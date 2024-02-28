@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+
+        const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+
+        function solution(S, K) {
+            // Implement your solution here
+            day_index = days.indexOf(S)
+            // return(day_index)
+            let target_index = (day_index + K) % 7
+            let target_day = days[target_index]
+            return target_day
+        }
+
+        console.log(solution("Wed", 2)) // Fri
+        console.log(solution("Sat", 23)) // Mon
+        console.log(solution("Mon", 100)) // Wed
+
+    </script>
+</body>
+</html>

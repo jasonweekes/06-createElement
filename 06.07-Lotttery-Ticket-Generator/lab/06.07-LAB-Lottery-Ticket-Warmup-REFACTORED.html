@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Lottery Generator</title>
+
+    <link href="../css/lottery-ticket-generator.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div id="app">
+
+
+        <h1>Powerball Random Lottery Ticket Generator</h1>
+
+        <header>
+
+            <img src="../images/powerball.png" style="width:50%; float:left;">
+
+            <section>
+                <div>
+                    <label for="num">How many tickets?</label>
+                    <input type="number" id="num-box" min="1" max="100" value="1">
+                </div>
+                <button>Generate Picks</button>
+            </section>
+
+        </header>
+
+        <div id="tickets-div" style="min-height:350px; font-size:2.5rem; padding:20px;">
+            
+            <img src="../images/powerball-tickets.jpg" alt="powerball tickets">
+        </div>
+
+    </div>
+
+    <script>
+
+        // for loop vs. while loop (refer to Lesson 05.03 for how to do a While Loop)
+        const fruits = ['apple', 'apricot', 'banana', 'blueberry', 'cherry', 'kiwi', 'grape', 'lemon', 'lime', 'mango', 'orange', 'pear', 'peach'];
+
+        // 1. pick a random fruit from the fruits array and log the random fruit -- 
+        //    not the random number -- to the console
+        let r = Math.floor(Math.random() * fruits.length);
+        console.log(fruits[r]);
+
+        // 2. using a loop, keep picking (and logging) random
+        //    fruits until you get the kiwi -- then stop
+        //    keep track of and log how many picks it took to get the kiwi
+        //    the last fruit logged should be the kiwi
+        //    variables, etc. from step 1 should not be included in step 2
+        for(let i = 0; i < 100; i++) {
+            let r = Math.floor(Math.random() * fruits.length);
+            if(fruits[r] == "kiwi") {
+                console.log(fruits[r] + " found at index " + r + " on pick number " + i);
+                break;
+            }
+        }
+
+        // the for loop works, but lacks elegance -- try a while loop instead:
+        // let picks = 0;
+        // while(fruits[r] != "kiwi") {
+        //     let r = Math.floor(Math.random() * fruits.length);
+        //     picks++;
+        //     console.log(fruits[r] + " found at index " + r + " on pick number " + picks);
+        // }
+
+        r = 0;
+        let count = 0;
+        while (fruits[r] != "kiwi") {
+            r = Math.floor(Math.random()* fruits.length);
+            count++;
+            console.log(count + " " + fruits[r]);
+        }
+
+
+        // 3. using a loop, keep picking (and logging) random
+        //    fruits until you get a 5-letter fruit (apple, grape, lemon, mango, peach) -- then stop
+        //    keep track of and log how many picks it took to get the 5-letter fruit
+        console.log("Five Letter Fruit");
+        r = 0;
+        count = 0;
+        while (r != 5) {
+            r = Math.floor(Math.random() * fruits.length);
+            let len = fruits[r].length;
+            count++;
+            console.log(count + " " + fruits[len]);
+        }
+
+
+        // mini-challenge: 
+        // Number the lottery picks
+        // example output:
+        // 1. 03 09 19 20 55 67
+        // 2. 13 22 44 45 63 65
+        
+        // lottery ticket generatir app warmup exercises
+        // 1.) Click the button to output a random number from 1-69 in the big div
+        const btn = document.querySelector('button');
+        const ticketsDiv = document.getElementById('tickets-div');
+        const numBox = document.getElementById('num-box');
+        // btn.addEventListener('click', function() {
+        //     let r = Math.ceil(Math.random() * 69);
+        //     ticketsDiv.innerHTML = r;
+        // });
+
+        // 2.) Click the button to output 5 random numbers from 1-69 in the 
+        // big div you can do them all in one line w spaces between numbers:
+        // hints: 
+        // - use a loop and 
+        // - make a named function (code is too long for anon inline function)
+        btn.addEventListener('click', pickSix);
+
+        function pickSix() {
+
+            ticketsDiv.innerHTML = "";
+
+            let numTix = Number(numBox.value);
+
+            for(let t = 0; t < numTix; t++) { // make 5 tix
+
+                let sixPicks = [];
+                while(sixPicks.length < 5) {
+                    let r = Math.ceil(Math.random() * 69);
+                    // if the array of lottery numbers does not include the random number, push it in
+                    if(!sixPicks.includes(r)) {
+                        sixPicks.push(r);
+                    }
+                }
+
+                // const pickableNums = []; // 1-69
+                // for(let n = 1; n <= 69; n++) {
+                //     pickableNums.push(n);
+                // }
+                // console.log('pickableNums', pickableNums);
+
+                // for(let i = 0; i < 5; i++) {
+                //     let r = Math.floor(Math.random() * pickableNums.length);
+                //     let num = pickableNums[r];
+                //     num = num < 10 ? "0" + num : "" + num;
+                //     sixPicks.push(num);
+                //     pickableNums.splice(r,1);
+                // }
+                
+
+                // 4 sort the sixPicks
+                sixPicks.sort();
+
+                // 5. add the 6th num -- the Powerball number
+                let r = Math.ceil(Math.random() * 26);
+                r = r < 10 ? "0" + r : "" + r;
+                sixPicks.push(r);
+                // turn arr into str to elim , and get " "
+                // let sixPicksPretty = (t+1) + ". &nbsp; " + sixPicks.join(" ");
+
+                // 6. make a div to hold the lottery pics
+                let ticketDiv = document.createElement('div');
+                ticketDiv.className = "ticket-div";
+                ticketsDiv.appendChild(ticketDiv);
+                ticketDiv.innerHTML = t + 1 + ".";
+
+                // 7. make 6 ping pong balls as divs -- one per number
+                for(let p = 0; p < 6; p++) {
+                    const pingPongBall = document.createElement('div');
+                    pingPongBall.className = "ping-pong-ball";
+                    // put the current number from the array into the ball
+                    pingPongBall.textContent = sixPicks[p];
+                    // output the ball to the 
+                    ticketDiv.appendChild(pingPongBall);
+                }
+
+                // ticketDiv.innerHTML += sixPicksPretty;
+            }
+        }
+
+        // 3.) Same as #2 BUT no repeat numbers allowed: 
+        //     All 5 nums must be UNIQUE
+        //     just cuz that's now lottery tickets are
+
+        // 4.) Same as #3 BUT numbers should appear in ascending order
+        //     plus, numbers less than 10 (1-9) need leading zero: 01, 02, 03 .. 08, 09
+        //     just cuz that's now lottery tickets are
+
+        // 5.) Same as #4 but with a 6th number from 1-26 (this is the Powerball number)
+        //     The Powerball number MAY be a repeat of one of the 5 "regular" numbers, so:
+        //     19 25 43 51 68 25    
+
+        // 6.) Same as #5 but with the six numbers inside a div with a colored background
+        //     the numbers should be centered in the div with some padding so they numbers
+        //     don't touch the sides of the div
+
+        // 7.) Same as #6 but with 5 divs, each w a 6-number lottery pick.. so, 
+        //     5 lottery tickets
+
+        // 8.) Same as #7 but with the user being able to choose how many tickets they want by
+        //     using the HOW MANY TICKETS input number box.
+
+        // 9. Same as #8 but with each individual number inside its own little div.
+        //    Best if the number is centered and the div is rounded to resemble a ping-pong ball.
+        //    The ping pong ball effect is best achieved by making the background entirely white 
+        //    or with a gradient fill that includes white.
+
+        // 10. Same as #9 but with the last "ping-pong ball" div having a red background
+        //     since this last number is the Powerball number
+
+    </script>
+
+
+</body>
+
+</html>
